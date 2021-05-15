@@ -1,0 +1,36 @@
+body {
+  font-family: 'Courier', 'monospace';
+  background-color: black;
+  width: 100%;
+  height: 100%;
+}
+
+
+#terminal {
+  width: 90%;
+  height: 90%;
+}
+
+input, pre, code {
+  background-color: black;
+  color: lightgreen;
+  font-family: inherit;
+  font-size: 100%;
+  padding: 0;
+  margin: 0;
+  border: solid 0px; /* inputの枠線を消す */
+}
+
+:focus {
+  /* focus時のアウトラインを消す */
+  outline: none;
+}
+
+ul {
+  /* listの点を消す */
+  list-style: none; 
+
+  /* list要素の左余白を消す */
+  margin: 0;
+  padding: 0;
+}
