@@ -63,6 +63,7 @@ const main = {
       }
       this.logs.push(' ')
       this.cmd = ''
+      this.scrollToElement()
     },
     clearHistory: function() {
       this.logs = []
@@ -89,6 +90,12 @@ const main = {
         }
       }
       return names
+    },
+    scrollToElement() {
+      const el = this.$el.getElementsByClassName('scroll-to-me')[0];
+      if (el) {
+        el.scrollIntoView();
+      }
     }
   },
   computed: {

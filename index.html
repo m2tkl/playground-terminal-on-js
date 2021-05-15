@@ -14,26 +14,27 @@
 </head>
 <body>
   <div id="app">
-      <code>
-        <ul>
-            <li v-for="log in logs">
-              <pre>{{ log }}</pre>
-            </li>
-        </ul>
-        {{ workingDir }}
-        <form @submit.prevent="exec">
-          $
-          <input
-            type="text"
-            id="terminal"
-            size="64"
-            length="64"
-            spellcheck="false"
-            autocomplete="off"
-            v-model="cmd"
-          >
-        </form>
-      </code>
+    <code>
+      <ul>
+          <li v-for="log in logs">
+            <pre>{{ log }}</pre>
+          </li>
+      </ul>
+      {{ workingDir }}
+      <form @submit.prevent="exec">
+        $
+        <input
+          type="text"
+          id="terminal"
+          size="64"
+          length="64"
+          spellcheck="false"
+          autocomplete="off"
+          v-model="cmd"
+        >
+      </form>
+      <div class="scroll-to-me"></div>
+    </code>
   </div>
 
   <!-- Import App -->
