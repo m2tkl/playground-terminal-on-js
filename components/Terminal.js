@@ -14,15 +14,8 @@ app.component('terminal', {
     {{ workingDir }}
     <form @submit.prevent="exec">
       $
-      <input
-        type="text"
-        id="terminal"
-        size="64"
-        length="64"
-        spellcheck="false"
-        autocomplete="off"
-        v-model="cmd"
-      >
+      <input type="text" id="terminal" size="64" length="64"
+        spellcheck="false" autocomplete="off" v-model="cmd">
     </form>
     <div class="scroll-to-me"></div>
   </code>
@@ -31,93 +24,80 @@ app.component('terminal', {
     return {
       cmd: '',
       logs: [],
-      workingDir: '~',
-      files: {
-        type: 'dir',
-        name: '~',
-        items: [
-          {
-            type: 'dir',
-            name: 'hoge',
-            items: [
-              { type: 'file', name: 'hoge1.txt', contents: 'hello hoge1.' },
-              { type: 'file', name: 'hoge2.txt', contents: 'hello hoge2.' },
-            ]
-          },
-          {
-            type: 'dir',
-            name: 'fuga',
-            items: [
-              { type: 'file', name: 'fuga1.txt', contents: 'hello hoge1.' },
-              { type: 'file', name: 'fuga2.txt', contents: 'hello hoge2.' },
-              { type: 'dir', name: 'fugafuga', items: [] }
-            ]
-          },
-          { type: 'file', name: 'piyo.txt', contents: 'piyopiyo\nthis is a piyo.' },
-        ],
-      }
+      dir: root,
     }
   },
   methods: {
-    exec: function() {
+    exec() {
       const cmd = this.cmd.split(/\s+/)
-      console.log(cmd)
+      this.execStart()
+      switch (cmd[0]) {
+        case '':
+          // pass
+          break
+        case 'clear':
+          this.clearHistory()
+          return
+        case 'ls':
+          this.ls()
+          break
+        case 'cd':
+          this.cd(cmd[1])
+          break
+        case 'cat':
+          this.cat(cmd[1])
+          break
+        default:
+          this.logs.push('command not found: ' + cmd)
+      }
+      this.execEnd()
+    },
+    clearHistory() {
+      this.logs = []
+      this.cmd = ''
+    },
+    execStart() {
       this.logs.push(this.workingDir)
       this.logs.push('$ ' + this.cmd)
-      if (!cmd[0]) {
-        // pass
-      } else if (cmd[0] === 'clear') {
-        this.clearHistory()
-        return
-      } else if (cmd[0] === 'ls') {
-        items = this.searchDir(this.files, this.workingDir)
-        names = this.getNameOfItems(items)
-        this.logs.push(names.join('\t'))
-      } else if (cmd[0] === 'cd') {
-        console.log(this.workingItems)
-        for (let item of this.workingItems) {
-          if (item.name === cmd[1] && item.type === 'dir') {
-            console.log(item.name)
-          }
-        }
-      } else if (cmd[0] === 'cat') {
-        for (let item of this.workingItems) {
-          if (item.name === cmd[1] && item.type === 'file') {
-            this.logs.push(item.contents);
-          }
-        }
-      } else {
-        this.logs.push('command not found: ' + cmd)
-      }
+    },
+    execEnd() {
       this.logs.push(' ')
       this.cmd = ''
       this.scrollToElement()
     },
-    clearHistory: function() {
-      this.logs = []
-      this.cmd = ''
-    },
-    searchDir: function(files, name) {
-      if (files.type === 'dir') {
-        if (files.name === name) {
-          return files.items
+    ls() {
+      result = ''
+      for (let child of this.dir.children) {
+        if (child instanceof Dir) {
+          result += (child.name + '/\t')
         }
-        console.log(files.name)
-        for (let item of files.items) {
-          this.searchDir(item)
+        if (child instanceof File) {
+          result += (child.name + '\t')
+        }
+      }
+      this.logs.push(result)
+    },
+    cat(fileName) {
+      for (let child of this.dir.children) {
+        if (child.name === fileName && child instanceof File) {
+          this.logs.push(child.contents);
         }
       }
     },
-    getNameOfItems: function(items) {
-      names = []
-      for (let item of items) {
-        if (item.type === 'dir') {
-          names.push(item.name + '/')
+    cd(dirName) {
+      if (dirName === '..') {
+        if (!this.dir.parent) {
+          this.logs.push('permission denied.')
         } else {
-          names.push(item.name)
+          this.dir = this.dir.parent
+        }
+        return
+      } 
+      for (let child of this.dir.children) {
+        if (child.name === dirName && child instanceof Dir) {
+          this.dir = child
         }
       }
-      return names
     },
     scrollToElement() {
       this.$nextTick(() => {
@@ -129,9 +109,15 @@ app.component('terminal', {
     }
   },
   computed: {
-    workingItems() {
-      items = this.searchDir(this.files, this.workingDir)
-      return items
-    },
+    workingDir() {
+      const getDirNameRec = (dir) => {
+        if (!dir.parent) {
+          return dir.name
+        } else {
+          return getDirNameRec(dir.parent) + '/' + dir.name
+        }
+      }
+      return getDirNameRec(this.dir)
+    }
   }
 })
