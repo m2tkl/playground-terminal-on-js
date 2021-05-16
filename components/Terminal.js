@@ -120,10 +120,12 @@ app.component('terminal', {
       return names
     },
     scrollToElement() {
-      const el = this.$el.getElementsByClassName('scroll-to-me')[0];
-      if (el) {
-        el.scrollIntoView();
-      }
+      this.$nextTick(() => {
+        const el = this.$el.getElementsByClassName('scroll-to-me')[0];
+        if (el) {
+          el.scrollIntoView();
+        }
+      })
     }
   },
   computed: {
