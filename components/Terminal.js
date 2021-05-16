@@ -110,14 +110,14 @@ app.component('terminal', {
   },
   computed: {
     workingDir() {
-      const getDirNameRec = (dir) => {
+      const recGetDirName = (dir) => {
         if (!dir.parent) {
           return dir.name
         } else {
-          return getDirNameRec(dir.parent) + '/' + dir.name
+          return recGetDirName(dir.parent) + '/' + dir.name
         }
       }
-      return getDirNameRec(this.dir)
+      return recGetDirName(this.dir)
     }
   }
 })
