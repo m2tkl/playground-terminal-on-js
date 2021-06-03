@@ -14,13 +14,21 @@
 </head>
 <body>
   <div id="app">
-    <terminal></terminal>
+    <typing-text
+      :text="introduction"
+      style="font-size: 200%; white-space: pre-wrap;"
+    ></typing-text>
+    <terminal/>
+  <div style="display: none";>
+    
+  </div>
   </div>
 
   <!-- Import App -->
   <script src="./main.js"></script>
   <script src="./data/Files.js"></script>
   <script src="./modules/FileTree.js"></script>
+  <script src="./components/TypingText.js"></script>
   <script src="./components/Terminal.js"></script>
   <!-- Mount App -->
   <script>
