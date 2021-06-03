@@ -1,15 +1,14 @@
 app.component('terminal', {
   props: {
-
   },
   template: 
   /* html */
   `
   <code>
     <ul>
-        <li v-for="log in logs">
-          <pre>{{ log }}</pre>
-        </li>
+      <li v-for="log in logs">
+        <pre>{{ log }}</pre>
+      </li>
     </ul>
     {{ workingDir }}
     <form @submit.prevent="exec">
@@ -32,23 +31,13 @@ app.component('terminal', {
       const cmd = this.cmd.split(/\s+/)
       this.execStart()
       switch (cmd[0]) {
-        case '':
-          // pass
-          break
-        case 'clear':
-          this.clearHistory()
-          return
-        case 'ls':
-          this.ls()
-          break
-        case 'cd':
-          this.cd(cmd[1])
-          break
-        case 'cat':
-          this.cat(cmd[1])
-          break
-        default:
-          this.logs.push('command not found: ' + cmd)
+        case '':                           break; // pass
+        case 'clear': this.clearHistory(); return;
+        case 'help':  this.help();         break;
+        case 'ls':    this.ls();           break;
+        case 'cd':    this.cd(cmd[1]);     break;
+        case 'cat':   this.cat(cmd[1]);    break;
+        default:      this.logs.push('command not found: ' + cmd)
       }
       this.execEnd()
     },
@@ -93,11 +82,53 @@ app.component('terminal', {
         }
         return
       } 
+      if (dirName === '~') {
+        this.dir = root
+        return
+      }
       for (let child of this.dir.children) {
         if (child.name === dirName && child instanceof Dir) {
           this.dir = child
         }
       }
+    },
+    help() {
+      const helpMessage = `----------------
+- What's this? -
+----------------
+This page is mimic of 'Bash' (and my introduction page).
+
+Due to my lack of skills, the commands are very limited.
+The following commands are available.
+- cd
+- ls
+- cat
+- help
+
+--------------------------
+- Command usage examples -
+--------------------------
+cd: [Change Directory] You can move the directory.
+  $ cd sample/
+    => move to 'sample/' directory
+  $ cd ~
+    => move to home ('~') directory
+  $ cd ..
+    => move to the parent directory
+
+ls: [List Segments] You can list the contents of the directory.
+  $ ls
+
+cat: [conCATnate] You can see the contents of file.
+  $ cat sample.txt
+    => display contents of 'sample.txt'
+
+help: Show this message
+  $ help
+
+Good luck!
+`
+      this.logs.push(helpMessage)
     },
     scrollToElement() {
       this.$nextTick(() => {
