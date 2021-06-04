@@ -98,12 +98,12 @@ app.component('terminal', {
 ----------------
 This page is mimic of 'Bash' (and my introduction page).
 
-Due to my lack of skills, the commands are very limited.
 The following commands are available.
 - cd
 - ls
 - cat
 - help
+(Due to my lack of skills, the commands are very limited. Sorry!)
 
 --------------------------
 - Command usage examples -

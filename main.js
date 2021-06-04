@@ -5,9 +5,10 @@ const main = {
 This is my introduction page.
 
 Please run 'help' command to know how to explore this page.
+You can input command after '$'.
 
 Have fun!
-(You can input after '$')`
+`
     }
   },
   mounted() {

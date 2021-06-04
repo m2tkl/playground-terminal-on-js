@@ -4,7 +4,7 @@ app.component('typing-text', {
   `
   <div :class="isTyping">
     <code>
-      <p>{{ typedText }}</p>
+      <p style="color: #ccc">{{ typedText }}</p>
     </code>
   </div>
   `,
@@ -16,7 +16,7 @@ app.component('typing-text', {
     speed: {
       type: Number, 
       required: false,
-      default: 100
+      default: 80 
     }
   },
   data() {
